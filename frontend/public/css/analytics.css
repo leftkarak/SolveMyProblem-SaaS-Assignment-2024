@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ολόκληρη η σελίδα καλύπτεται από την εικόνα */
+body {
+    margin: 0;
+    padding: 0;
+    background: url("/img/pikaso_embed.png") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh; /* Ύψος 100% της προβολής */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Στυλ για το header */
+header {
+    background-color: rgba(75, 0, 130, 0.65); /*Σκουρο μωβ*/
+    color: white;
+    width: 100%;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Container για λογότυπο, κουμπιά και τίτλο */
+.logo-container {
+    display: flex;
+    justify-content: space-between; /* Τοποθετεί τα στοιχεία αριστερά και δεξιά */
+    align-items: center;
+    width: 100%;
+}
+
+.logo-container h1 {
+    margin-left: 110px;
+}
+/* Στυλ για το email (στο κέντρο της γραμμής) */
+#email {
+    font-size: 18px;
+}
+
+/* Αριστερό τμήμα (κουμπιά) */
+.left-section {
+    display: flex;
+    align-items: center; /* Στοιχίζει τα κουμπια στην ίδια γραμμη στην ίδια γραμμή */
+}
+
+/* Στυλ για τα κουμπιά */
+.create_submission-credits-submissions {
+    margin-left: 115px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Απόσταση ανάμεσα στα κουμπιά */
+}
+
+.create_submission-btn,
+.credits-btn,
+.submissions-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    color: white;
+    right: 15px;
+    cursor: pointer;
+}
+
+.create-icon, .coin-icon, .home-icon {
+    font-size: 15px; /* Μέγεθος του emoji */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Κύκλος */
+    background-color: rgba(255, 255, 255, 0.3); /* Διαφανές φόντο */
+    border: 2px solid white;
+}
+
+.create_submission-text, .credits-text, .submissions-text {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Τίτλος (τέρμα δεξιά στην ίδια γραμμή με το λογότυπο και κουμπιά) */
+.page-title {
+    font-size: 40px;
+    margin-bottom: 0;
+}
+
+/* Γραμμή για το email και το timestamp */
+.right-section{
+    display: flex;
+    justify-content: space-between; /* Στοιχίζει το email αριστερά και το timestamp δεξιά */
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+.page-title{
+    font-size: 30px;
+    margin-left: 270px; /* Αλλάζεις την τιμή ανάλογα με την επιθυμητή απόσταση */
+}
+
+/* Στυλ για την ημερομηνία/ώρα (κάτω από τον τίτλο) */
+.timestamp {
+    font-size: 15px;
+}
+
+/* Διάταξη των γραφημάτων δίπλα δίπλα */
+
+
+#averageDuration {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-image {
+    position: absolute;
+    top: 10px;          /* Τοποθέτηση στην κορυφή του container */
+    left: 10px;        /* Τοποθέτηση δεξιά */
+    width: 110px;    /* Προσαρμόστε το μέγεθος ανάλογα με τις ανάγκες σας */
+    height: auto;
+}
+
+
+.chart-wrapper {
+    width: 90%;
+    max-width: 800px;
+    display: flex; /* Χρησιμοποιούμε flexbox για οριζόντια διάταξη */
+    margin: 10px auto; /* Κεντράρισμα του περιεχομένου */
+    align-items: center;
+    background-color: rgba(255, 255, 255);
+    justify-content: center;
+}
+
+.average-container{
+    background-color: #ffe5e5;
+    display: flex;
+    flex-direction: column;
+    margin-top: 200px;
+    width: 50%;
+    max-width: 800px;
+    border-radius: 5px;
+    border: 1px solid black;
+    align-items: center;
+    height: 200px;
+}
+
+.filter-options {
+    margin: 10px 50px 0 50px;
+
+}
+
+button {
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+canvas {
+    width: 100%; /* Make the canvas take full width of the container */
+    height: 300px; /* Set a fixed height for the charts */
+}

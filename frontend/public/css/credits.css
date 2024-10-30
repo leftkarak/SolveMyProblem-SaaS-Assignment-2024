@@ -1,0 +1,259 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ολόκληρη η σελίδα καλύπτεται από την εικόνα */
+body {
+    margin: 0;
+    padding: 0;
+    background: url("/img/pikaso_embed.png") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh; /* Ύψος 100% της προβολής */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Στυλ για το header */
+header {
+    background-color: rgba(75, 0, 130, 0.65); /*Σκουρο μωβ*/
+    color: white;
+    width: 100%;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Container για λογότυπο, κουμπιά και τίτλο */
+.logo-container {
+    display: flex;
+    justify-content: space-between; /* Τοποθετεί τα στοιχεία αριστερά και δεξιά */
+    align-items: center;
+    width: 100%;
+}
+
+.logo-container h1 {
+    margin-left: 110px;
+}
+/* Στυλ για το email (στο κέντρο της γραμμής) */
+#email {
+    font-size: 18px;
+}
+
+/* Αριστερό τμήμα (κουμπιά) */
+.left-section {
+    display: flex;
+    align-items: center; /* Στοιχίζει τα κουμπια στην ίδια γραμμη στην ίδια γραμμή */
+}
+
+/* Στυλ για τα κουμπιά */
+.create_submission-submissions-log{
+    margin-left: 115px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Απόσταση ανάμεσα στα κουμπιά */
+}
+
+.create_submission-btn,
+.submissions-btn,
+.log-btn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    color: white;
+    right: 15px;
+    cursor: pointer;
+}
+
+.create-icon, .home-icon, .log-icon {
+    font-size: 15px; /* Μέγεθος του emoji */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Κύκλος */
+    background-color: rgba(255, 255, 255, 0.3); /* Διαφανές φόντο */
+    border: 2px solid white;
+}
+
+.create_submission-text, .submissions-text, .log-text {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Τίτλος (τέρμα δεξιά στην ίδια γραμμή με το λογότυπο και κουμπιά) */
+.page-title {
+    font-size: 40px;
+    margin-bottom: 0;
+}
+
+/* Γραμμή για το email και το timestamp */
+.right-section{
+    display: flex;
+    justify-content: space-between; /* Στοιχίζει το email αριστερά και το timestamp δεξιά */
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+.page-title{
+    font-size: 30px;
+    margin-left: 320px; /* Αλλάζεις την τιμή ανάλογα με την επιθυμητή απόσταση */
+}
+
+/* Στυλ για την ημερομηνία/ώρα (κάτω από τον τίτλο) */
+.timestamp {
+    font-size: 15px;
+}
+
+
+/* Credits container κάτω από το header */
+.credits-container {
+    background-color: rgba(255, 255, 255, 0.7); /* Διαφάνεια στο φόντο του credits */
+    padding: 20px;
+    margin-top: 160px; /* Αποφυγή επικάλυψης από το fixed header */
+    width: 80%;
+    max-width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+#current-credits {
+    font-size: 2em; /* Κάνει το μέγεθος του νουμερου 2 φορές μεγαλύτερο από το υπόλοιπο */
+}
+
+    .credits-container h1 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .credits-container h2 {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    /* Στυλ για το balance */
+    .balance {
+        margin-bottom: 20px;
+    }
+
+    .balance label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .balance input {
+        width: 60%;
+        padding: 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    /* Confirm button */
+    .confirm-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .confirm-button:hover {
+        background-color: #45a049;
+    }
+.logo-image {
+    position: absolute;
+    top: 10px;          /* Τοποθέτηση στην κορυφή του container */
+    left: 10px;        /* Τοποθέτηση δεξιά */
+    width: 110px;    /* Προσαρμόστε το μέγεθος ανάλογα με τις ανάγκες σας */
+    height: auto;
+}
+
+/* Modal (background) */
+.modal {
+    display: none; /* Κρυφό από προεπιλογή */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Ελαφρώς σκοτεινό φόντο */
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Modal content */
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.9); /* Λευκό με μικρή διαφάνεια */
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Σκιά για τρισδιάστατη αίσθηση */
+    max-width: 400px;
+    margin: auto;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: scale(0.9); /* Ξεκινάει μικρό */
+    opacity: 0; /* Ξεκινάει αόρατο */
+}
+
+.modal.show .modal-content {
+    transform: scale(1); /* Σταδιακά μεγαλώνει */
+    opacity: 1; /* Σταδιακά γίνεται ορατό */
+}
+
+/* Κουμπί για κλείσιμο */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #333; /* Αλλαγή χρώματος κατά το hover */
+}
+
+/* Confirm button στο modal */
+.confirm-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Απόσταση από το κείμενο */
+}
+
+.confirm-button:hover {
+    background-color: #45a049;
+}
+
+.alert-message {
+    font-size: 20px; /* Καθορίζει το μέγεθος της γραμματοσειράς */
+    color: darkred; /* Προαιρετικό: Καθορίζει το χρώμα του μηνύματος */
+    padding: 10px; /* Προσθέτει λίγο χώρο γύρω από το κείμενο */
+    background-color: transparent; /* Αφαίρεση φόντου */
+    border-radius: 5px; /* Προσθέτει καμπυλωτές γωνίες */
+    border: none; /* Αφαίρεση ορίου */
+    box-shadow: none; /* Αφαίρεση σκιάς */
+    margin-top: 15px;
+}
+

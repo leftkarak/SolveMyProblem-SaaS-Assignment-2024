@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>View Submission</title>
+    <link rel="stylesheet" href="/css/view_submission.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo-container">
+        <h1>Solve My Problem</h1>
+        <img src="/img/540076-200.png" alt="Company Logo" class="logo-image">
+        <p>Logged in as: <strong id="email"></strong></p>
+    </div>
+
+    <!-- Λογότυπο και κουμπιά στην ίδια γραμμή -->
+    <div class="left-section">
+
+        <div class="create_submission-credits-submissions-log">
+            <form id="create_submissionForm">
+                <button type="submit" class="create_submission-btn">
+                    <span class="create-icon">📝</span>
+                    <span class="create_submission-text">New Submission</span>
+                </button>
+            </form>
+
+            <form id="creditsForm">
+                <button type="submit" class="credits-btn">
+                    <span class="coin-icon">💰</span>
+                    <span class="credits-text">Buy/View Credits</span>
+                </button>
+            </form>
+
+            <form id="submissionsForm">
+                <button type="submit" class="submissions-btn">
+                    <span class="home-icon">🏛</span>
+                    <span class="submissions-text">Back to Submissions</span>
+                </button>
+            </form>
+            <form id="analyticsForm">
+                <button type="submit" class="log-btn">
+                    <span class="log-icon">📊</span>
+                    <span class="log-text">Analytics</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Τίτλος στο κεντρο σχεδον στην ίδια γραμμή με τα κουμπιά και email τερμα δεξιά -->
+        <div class="right-section">
+            <h2 class="page-title">👁 View Submission</h2>
+            <div class="timestamp">
+                <span id="datetime"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+
+    <!--Info-->
+    <div class="row-info">
+        <div class="box-info">
+            <h4> Creator: </h4>
+            <p> <strong id="creator"></strong> </p>
+        </div>
+        <div class="box-info">
+            <h4> Submission Name: </h4>
+            <p> <strong id="submission"></strong> </p>
+        </div>
+        <div class="box-info">
+            <h4> State: </h4>
+            <p> <strong id="state"></strong> </p>
+        </div>
+        <div class="box-info">
+            <h4> Creation Date: </h4>
+            <p> <strong id="creation-date"></strong> </p>
+        </div>
+    </div>
+
+
+    <div class="row-info">
+
+        <!--Python Cell-->
+        <div class="program-cell">
+            <h2>Python</h2>
+            <div class="program-box" id="python-preview"></div>
+            <div class="action-box">
+                <button class="btn" onclick="openModal(`python`)">Full Screen</button>
+                <button class="btn" onclick="downloadCode(`python`)">Download</button>
+            </div>
+        </div>
+
+        <!--JSON Cell-->
+        <div class="program-cell">
+            <h2>JSON</h2>
+            <div class="program-box" id="json-preview"></div>
+            <div class="action-box">
+                <button class="btn" onclick="openModal(`json`)">Full Screen</button>
+                <button class="btn" onclick="downloadCode(`json`)">Download</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="pythonModal" class="file-modal">
+    <div class="file-modal-content">
+        <button class="close-file" onclick="closeModal(`python`)">Close</button>
+        <pre id='python-code'></pre>
+    </div>
+</div>
+<div id="jsonModal" class="file-modal">
+    <div class="file-modal-content">
+        <button class="close-file" onclick="closeModal(`json`)">Close</button>
+        <pre id='json-code'></pre>
+    </div>
+</div>
+
+<div class="buttons">
+    <!-- ΕΔΩ ΕΚΑΝΑ ΤΟ ΕΚΑΝΑ confirm-run-button -->
+    <button class="confirm-run-button" id="runButton" type="button" disabled onclick="runCreation()">Run</button>
+
+    <!--Θέλουμε redirect στην results EΔΩ ΤΟ ΕΚΑΝΑ confirm-results-button + ΠΡΟΣΘΗΚΗ disabled (ανενεργο πριν πατηθει το run)-->
+    <button class="confirm-results-button" id="resultsButton" type="button" disabled onclick="toResult()">Results</button>
+
+    <!--Delete submission και να εμφανιζεται καταληλλο modal alert(pop-up) αυτα τα κανει η συναρτηση παρακάτω-->
+    <button class="confirm-delete-button" type="button" disabled onclick="Delete()">Delete</button>
+</div>
+
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeAlert()">&times;</span>
+
+        <div class="alert-message">
+            <p id="alert-message"></p>
+        </div>
+        <button class="confirm-button" onclick="closeAlert()">OK</button>
+    </div>
+</div>
+
+
+<script src="/js/timestamp.js"></script>
+<script>
+    // Header components
+    // Button to go to Submissions page
+    document.getElementById('submissionsForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        fetch('/submissions')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to submissions page on success
+                    window.location.href = '/submissions';
+                } else {
+                    console.error('Failed to go to /submissions');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading Submissions:', error);
+            });
+    });
+
+    // Action when Buy/View Credits button is pressed
+    document.getElementById("creditsForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        fetch('/credits')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to credits page on success
+                    window.location.href = '/credits';
+                } else {
+                    console.error('Failed to go to /credits');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading credits:', error);
+            });
+    });
+
+    // Button to go to Create Submission page
+    document.getElementById("create_submissionForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        fetch('/create-submission')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to create-submission page on success
+                    window.location.href = '/create-submission';
+                } else {
+                    console.error('Failed to go to /create-submission');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading create-submission:', error);
+            });
+    });
+
+    // Button to go to Analytics page
+    document.getElementById("analyticsForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        fetch('/analytics')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to create-submission page on success
+                    window.location.href = '/analytics';
+                } else {
+                    console.error('Failed to go to /analytics');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading analytics:', error);
+            });
+    });
+
+    // Populate body
+    // Global variables
+    let jsonData;
+    let creator;
+    let submission;
+    let state;
+    let pythonPreview;
+    let formattedJson;
+    let jsonPreview;
+    let creation_date;
+
+    // GET request to fetch email and parameters from session
+    fetch('/submission/get-email')
+        .then(response => response.json())
+        .then(data => {
+            // Set the email and parameters
+            // This is for header
+            document.getElementById("email").textContent = data.email;
+            // These are for the GET request
+            let creator_email = data.creator;
+            let submission_id = data.submission;
+
+            // Now that we have creator_email and submission_id, we can make the second fetch request
+            // GET request to fetch the submission information when the page loads
+            return fetch(`http://localhost:4012/submission/${creator_email}/${submission_id}`);
+        })
+        .then(response => response.json())  // Parse the JSON response from the second fetch
+        .then(Data => {
+            if (!Data) {
+                throw new Error("No data received");
+            }
+
+            jsonData = Data.submission;
+            creator = jsonData.email;
+            submission = jsonData.submission_id;
+            state = jsonData.state;
+            creation_date = jsonData.creation_date;
+
+            // Display submission information from the base
+            document.getElementById("creator").textContent = creator;
+            document.getElementById("submission").textContent = submission;
+            document.getElementById("state").textContent = state;
+            document.getElementById("creation-date").textContent = new Date(creation_date).toLocaleString();
+
+            if (state === "Ready") {
+                document.querySelector('.confirm-run-button').disabled = false;
+                document.querySelector('.confirm-results-button').disabled = true;
+                document.querySelector('.confirm-delete-button').disabled = false;
+            }
+
+            else if (state === "Completed") {
+                document.querySelector('.confirm-run-button').disabled = true;
+                document.querySelector('.confirm-results-button').disabled = false;
+                document.querySelector('.confirm-delete-button').disabled = false;
+            }
+
+            // Display the Python code in the text container (short version)
+            pythonPreview = document.getElementById('python-preview');
+            pythonPreview.textContent = jsonData.users_code;
+
+            // Format JSON with indentation and display it
+            formattedJson = jsonData.users_input.toString();
+            jsonPreview = document.getElementById('json-preview');
+            jsonPreview.textContent = formattedJson;
+
+        })
+        .catch(error => {
+            // Catch and log any errors from either fetch
+            console.error("Error occurred:", error.message || error);
+        });
+
+
+    // Function to open the modal
+    function openModal(lang) {
+        if(lang === `python`)
+        {
+            document.getElementById("pythonModal").style.display = "block";
+            document.getElementById('python-code').textContent = jsonData.users_code;
+        }else{
+            document.getElementById("jsonModal").style.display = "block";
+            document.getElementById("json-code").textContent = formattedJson;
+        }
+    }
+
+    // Function to close the modal
+    function closeModal(lang) {
+        if (lang ===`python`) {
+            document.getElementById("pythonModal").style.display = "none";
+        }else {
+            document.getElementById("jsonModal").style.display = "none";
+        }
+    }
+
+    // JavaScript function to handle the download
+    function downloadCode(lang) {
+        if (lang === `python`){
+            code = pythonPreview.textContent;
+        }else{
+            code = jsonPreview.textContent;
+        }
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        if (lang === `python`){
+            a.download = 'code.py'
+        }else{
+            a.download = 'input.json'
+
+        }
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    // Function to confirm run creation
+    function runCreation() {
+        const submission_details = {
+            "email": creator,
+            "submission_id": submission
+        };
+
+        try {
+            // POST request to execute submission using fetch
+            fetch('http://localhost:4008/execute-submission', {
+                method: 'POST',
+                headers: {
+                    "content-Type": "application/json"
+                },
+                body: JSON.stringify(submission_details),
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    // If accept === "false" , show fail alert
+                    if (data.accept === "false") {
+                        showAlert(" EXECUTION FAIL: \n Not enough credits to execute: " + submission_details.submission_id);
+
+                        // If accept === "true", show success alert
+                    } else if (data.accept === "true") {
+                        showAlert(" Submission: " + submission_details.submission_id + " sent to solver");
+
+                    }
+                    /*
+                        This else is used to alert the frontend that the synchronisation/consumer bug occurred in the backend.
+                        The bug is that sometimes two specific topics aren't consumed by the ms-submission adapter.
+                        The two topic are execution-accepted and execution-denied
+                     */
+                    else {
+                        console.log(" The bug happened !!!");
+                        showAlert(" Execution Request Send !!! ");
+                    }
+
+                })
+                .catch(error => {
+                    // Handle any errors, like network issues or non-OK status
+                    console.error("Error: ", error);
+                    showAlert("An error occurred: " + error.message);
+                });
+
+        } catch (error) {
+            // Handle any unexpected JavaScript errors
+            console.error("Unexpected error: ", error);
+            showAlert("An unexpected error occurred trying to execute request, in submissions.html.");
+        }
+    }
+
+    // Function to go to result page
+    function toResult() {
+
+        fetch(`/results/${creator}/${submission}`)
+            .then(response => {
+                if(response.ok){
+                    // Redirect to submissions page on success
+                    window.location.href = `/results/${creator}/${submission}`;
+                } else {
+                    console.error("Failed to go to /results");
+
+                }
+            })
+            .catch(error => {
+                console.error("Error: ", error);
+            });
+
+        return null;
+    }
+
+
+    // Function to go delete submission
+    function Delete() {
+        let submission_details = {
+            "email": creator,
+            "submission_id": submission
+        }
+
+        try {
+            // POST request to update the backend using fetch
+            fetch('http://localhost:4008/delete-submission', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(submission_details)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Go back to main page (submissions)
+                        window.location.href = '/submissions'
+
+                    } else {
+                        // If not 200 OK, handle as an error
+                        throw new Error("Deletion failed with status: " + response.status);
+                    }
+                })
+                .catch(error => {
+                    // Handle any errors, like network issues or non-OK status
+                    console.error("Error: ", error);
+                    showAlert("An error occurred: " + error.message);
+                });
+
+        } catch (error) {
+            // Handle any unexpected JavaScript errors
+            console.error("Unexpected error: ", error);
+            showAlert("An unexpected error occurred.");
+        }
+    }
+
+
+    // Code for custom alert
+    // Επιλέξτε το κουμπί Confirm και το modal
+    const confirmrunButton = document.querySelector('.confirm-run-button');
+    const confirmdeleteButton = document.querySelector('.confirm-delete-button');
+    const modal = document.querySelector('.modal');
+    const closeBtn = document.querySelector('.close-btn');
+
+    // Όταν πατηθεί το κουμπί "Run", το modal θα εμφανιστεί
+    confirmrunButton.addEventListener('click', function() {
+        modal.style.display = 'flex'; // Ανοίγει το modal
+        modal.classList.add('show'); // Προσθέτει την κλάση για ομαλή μετάβαση
+    });
+    // Όταν πατηθεί το κουμπί "Results", το modal θα εμφανιστεί
+    confirmdeleteButton.addEventListener('click', function() {
+        modal.style.display = 'flex'; // Ανοίγει το modal
+        modal.classList.add('show'); // Προσθέτει την κλάση για ομαλή μετάβαση
+    });
+
+    // Όταν πατηθεί το κουμπί κλεισίματος, το modal κλείνει
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none'; // Κλείνει το modal
+        modal.classList.remove('show'); // Αφαιρεί την κλάση για ομαλή μετάβαση
+    });
+
+    // Κλείσιμο του modal όταν πατηθεί οπουδήποτε έξω από το modal
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none'; // Κλείνει το modal
+            modal.classList.remove('show'); // Αφαιρεί την κλάση για ομαλή μετάβαση
+        }
+    });
+
+    // Λειτουργία για να κλείσει το custom alert
+    function closeAlert() {
+        document.getElementById("custom-alert").style.display = "none";
+        // Reload the page after alert
+        location.reload();
+    }
+
+    function showAlert(message) {
+        document.getElementById("alert-message").innerText = message;
+        document.getElementById("custom-alert").style.display = "flex"; // Άμεση εμφάνιση
+    }
+
+</script>
+
+</body>
+</html>

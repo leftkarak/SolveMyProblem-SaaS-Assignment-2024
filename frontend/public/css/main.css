@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container img {
+    width: 220px; /* Αυξήσαμε το μέγεθος του λογότυπου */
+    height: 140px; /* Αυξήσαμε το μέγεθος του λογότυπου */
+    margin-right: 20px; /* Αυξήσαμε το διάστημα μεταξύ λογότυπου και τίτλου */
+}
+
+.timestamp {
+    font-size: 1em;
+    color: white;
+}
+
+.login-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 50px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 60px;
+    width: 300px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+input[type="text"] {
+    padding: 20px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+input[type="text"]::placeholder {
+    color: #999;
+}
+
+button { /* μεγεθος πληκτρου login*/
+    padding: 8px 20px;
+    font-size: 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}

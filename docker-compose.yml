@@ -1,0 +1,222 @@
+services:
+
+  # TEST MICROSERVICES
+
+
+  # FRONTEND
+  ms-frontend:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
+    restart:
+      always
+
+  # API MICROSERVICES (ADAPTERS)
+  ms-credits-adapter:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-credits-adapter
+    build: ./ms-credits-adapter
+    ports:
+      - 4007:4007
+    restart:
+      always
+
+  ms-submissions-adapter:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-submissions-adapter
+    build: ./ms-submissions-adapter
+    ports:
+      - 4008:4008
+    restart:
+      always
+
+  ms-submissions-list-adapter:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-submissions-list-adapter
+    build: ./ms-submissions-list-adapter
+    ports:
+      - 4011:4011
+    restart:
+      always
+
+  ms-view-submission-adapter:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-view-submission-adapter
+    build: ./ms-view-submission-adapter
+    ports:
+      - 4012:4012
+    restart:
+      always
+
+  ms-output-adapter:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-output-adapter
+    build: ./ms-output-adapter
+    ports:
+      - 4009:4009
+    restart:
+      always
+
+  ms-analytics-adapter:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-analytics-adapter
+    build: ./ms-analytics-adapter
+    ports:
+      - 4010:4010
+    restart:
+      always
+
+  # BACKEND MICROSERVICES
+   #SUBMISSIONS
+  ms-submissions:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-submissions
+    build: ./ms-submissions
+    restart: always
+
+  mongodb-submissions:
+    container_name: mongodb-submissions
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: omada3
+    restart: always
+
+  # OUTPUTS
+  ms-output:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-output
+    build: ./ms-output
+    restart: always
+
+  mongodb-output:
+    container_name: mongodb-output
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: omada3
+    restart: always
+
+  # CREDITS
+  ms-credits:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-credits
+    build: ./ms-credits
+    restart: always
+
+  mongodb-credits:
+    container_name: mongodb-credits
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    depends_on:
+      kafka:
+        condition: service_healthy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: omada3
+    restart: always
+
+  # ANALYTICS
+  ms-analytics:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    container_name: ms-analytics
+    build: ./ms-analytics
+    restart: always
+
+  mongodb-analytics:
+    container_name: mongodb-analytics
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    depends_on:
+        kafka:
+          condition: service_healthy
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: omada3
+    restart: always
+
+  # SOLVER
+  ms-solver:
+    depends_on:
+      kafka:
+        condition: service_healthy
+    build: ./ms-solver
+    restart: always
+
+  # CHOREOGRAPHER
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181
+    restart: always
+
+  kafka:
+    container_name: kafka-broker
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - zookeeper
+    healthcheck:
+      test: /bin/kafka-cluster cluster-id --bootstrap-server kafka:9092 || exit 1
+      interval: 1s
+      timeout: 60s
+      retries: 60
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: always
+
+  init-kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - kafka
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka-broker:9092 --list
+
+      echo -e 'Creating kafka topics'
+
+      kafka-topics --bootstrap-server kafka-broker:9092 --create --if-not-exists --topic solver-req --replication-factor 1 --partitions 1
+      
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka-broker:9092 --list
+      "

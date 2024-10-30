@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ολόκληρη η σελίδα καλύπτεται από την εικόνα */
+body {
+    margin: 0;
+    padding: 0;
+    background: url("/img/pikaso_embed.png") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh; /* Ύψος 100% της προβολής */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Το header είναι σταθερό στην κορυφή */
+header {
+    background-color: rgba(75, 0, 130, 0.65); /*Σκουρο μωβ*/
+    padding: 15px;
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute; /* Τοποθέτηση στην κορυφή */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 70px;  /*Καθορίζει ύψος για το header */
+}
+
+/* Logo container για τη στοίχιση του logo */
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+
+h1 {
+    margin-left: 60px;
+}
+
+.timestamp {
+    font-size: 16px;
+}
+
+h2 {
+    margin-top: 110px;
+    display: flex;
+    color: #ffffff;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.6);
+}
+/* Στυλ για το login container */
+.login-container {
+    background-color: rgba(255, 255, 255, 0.7); /* Διαφάνεια στο φόντο του login */
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.65);
+    max-width: 400px;
+    text-align: center;
+    margin-top: 25px; /* Το login box θα εμφανιστεί κάτω από το header */
+}
+
+input[type="text"] {
+    padding: 20px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+input[type="text"]::placeholder {
+    color: #999;
+}
+
+button { /* μεγεθος πληκτρου login*/
+    padding: 8px 20px;
+    font-size: 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+/* Στυλ για την εικόνα του logo */
+.logo-image {
+    position: absolute;
+    top: 5px;          /* Τοποθέτηση στην κορυφή του container */
+    left: 5px;        /* Τοποθέτηση δεξιά */
+    width: 60px;    /* Προσαρμόστε το μέγεθος ανάλογα με τις ανάγκες σας */
+    height: auto;
+}
+
+
+

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+<header>
+    <div class="logo-container">
+        <h1>Solve My Problem</h1>
+        <img src="/img/540076-200.png" alt="Company Logo" class="logo-image">
+    </div>
+    <div class="timestamp">
+        <span id="datetime"></span>
+    </div>
+</header>
+
+<h2>Welcome! 👋</h2>
+
+<div class="login-container">
+    <form id="LoginForm">
+        <label for="email">User email:</label>
+        <input type="email" id="email" name="email" placeholder=" Enter your email here " required>
+        <button type="submit"> Login </button>
+    </form>
+</div>
+
+<script src="/js/timestamp.js"></script>
+
+    <script>
+        // Action when button Login is pressed
+        document.getElementById('LoginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const data = {
+                email: document.getElementById('email').value
+            };
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to submissions page on success
+                        window.location.href = '/submissions';
+
+                    } else {
+                        console.error('Failed to login');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during login:', error);
+                });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Create Submission </title>
+    <link rel="stylesheet" href="/css/create-submission.css">
+</head>
+
+<body>
+<header>
+
+    <div class="logo-container">
+        <h1>Solve My Problem</h1>
+        <img src="/img/540076-200.png" alt="Company Logo" class="logo-image">
+        <p>Logged in as: <strong id="email"></strong></p>
+    </div>
+
+    <!-- Λογότυπο και κουμπιά στην ίδια γραμμή -->
+    <div class="left-section">
+
+        <div class="submissions-credits-log">
+
+            <form id="submissionsForm">
+                <button type="submit" class="submissions-btn">
+                    <span class="home-icon">🏛</span>
+                    <span class="submissions-text">Back to Submissions</span>
+                </button>
+            </form>
+            <form id="creditsForm">
+                <button type="submit" class="credits-btn">
+                    <span class="coin-icon">💰</span>
+                    <span class="credits-text">Buy/View Credits</span>
+                </button>
+            </form>
+            <form id="analyticsForm">
+                <button type="submit" class="log-btn">
+                    <span class="log-icon">📊</span>
+                    <span class="log-text">Analytics</span>
+                </button>
+            </form>
+
+        </div>
+
+
+        <!-- Τίτλος στο κεντρο σχεδον στην ίδια γραμμή με τα κουμπιά και email τερμα δεξιά -->
+        <div class="right-section">
+            <h2 class="page-title">📝 Create New Submission</h2>
+            <div class="timestamp">
+                <span id="datetime"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="balance">
+        <label for="submission_id"> Submission Name: </label>
+        <input type="text" id="submission_id" placeholder="Enter name" required>
+    </div>
+
+    <form id="submissionForm" enctype="multipart/form-data">
+
+        <label for="pyFile">Python File (.py):</label>
+        <input type="file" id="pyFile" name="pyFile" accept=".py" required><br><br>
+
+        <label for="jsonFile">JSON File (.json):</label>
+        <input type="file" id="jsonFile" name="jsonFile" accept=".json" required><br><br>
+
+        <div class="buttons">
+            <button class="confirm-creation-button" id="creationButton" type="button" onclick="confirmCreation()"> Create </button>
+
+            <button class="confirm-view-button" id="viewButton" type="button" disabled onclick="toView()"> View </button>
+        </div>
+
+    </form>
+</div>
+
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeAlert()">&times;</span>
+
+        <div class="alert-message">
+            <p id="alert-message"></p>
+        </div>
+        <button class="confirm-button" onclick="closeAlert()">OK</button>
+    </div>
+</div>
+
+<script src="/js/timestamp.js"></script>
+<script>
+    // Header components
+    // GET request to fetch email from session
+    fetch('/create-submission/get-email')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("email").textContent = data.email;
+            // Global variable email so can be accessed by function confirmCreation()
+            Email = data.email;
+
+        })
+        .catch(error => {
+            console.error("Error fetching email in credits.html: ", error)
+        })
+
+    // Button to go to Submissions page
+    document.getElementById('submissionsForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        fetch('/submissions')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to submissions page on success
+                    window.location.href = '/submissions';
+                } else {
+                    console.error('Failed to go to /submissions');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading Submissions:', error);
+            });
+    });
+
+    // Action when Buy/View Credits button is pressed
+    document.getElementById("creditsForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        fetch('/credits')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to credits page on success
+                    window.location.href = '/credits';
+                } else {
+                    console.error('Failed to go to /credits');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading credits:', error);
+            });
+    });
+
+    // Button to go to Analytics page
+    document.getElementById("analyticsForm").addEventListener("submit", function(event) {
+        event.preventDefault();  // Prevent default form submission
+
+        fetch('/analytics')
+            .then(response => {
+                if (response.ok) {
+                    // Redirect to create-submission page on success
+                    window.location.href = '/analytics';
+                } else {
+                    console.error('Failed to go to /analytics');
+                }
+            })
+            .catch(error => {
+                console.error('Error during loading analytics:', error);
+            });
+    });
+
+    // Populate page
+    // Global variable email so can be accessed by function confirmCreation()
+    let Email;
+
+    // Function to confirm creation
+    function confirmCreation() {
+        // Get metadata information
+        let submission_id = document.getElementById("submission_id").value;
+        let email = Email;
+
+        // Get file inputs
+        let pyFile = document.getElementById("pyFile").files[0];
+        let jsonFile = document.getElementById("jsonFile").files[0];
+
+        // Compose body using FormData
+        const submission_details = new FormData();
+        submission_details.append("metadata", JSON.stringify({ email: email, submission_id: submission_id })); // Append metadata as a JSON string
+        submission_details.append("pyFile", pyFile); // Append the Python file
+        submission_details.append("jsonFile", jsonFile); // Append the JSON file
+
+        try {
+            // POST request to update the backend using fetch
+            fetch('http://localhost:4008/create-submission', {
+                method: 'POST',
+                body: submission_details
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // If the status is 200 OK, show success alert
+
+                        // Ενεργοποίηση του κουμπιού "RUN" μετά την επιβεβαίωση της δημιουργίας
+                        document.getElementById("viewButton").disabled = false;
+
+                        showAlert("Submission Confirmed!");
+
+                    } else {
+                        // If not 200 OK, handle as an error
+                        throw new Error("Submission failed with status: " + response.status);
+                    }
+                })
+                .catch(error => {
+                    // Handle any errors, like network issues or non-OK status
+                    console.error("Error: ", error);
+                    showAlert("An error occurred: " + error.message);
+                });
+
+        } catch (error) {
+            // Handle any unexpected JavaScript errors
+            console.error("Unexpected error: ", error);
+            showAlert("An unexpected error occurred.");
+        }
+    }
+
+    // Function to go to view submission page
+    function toView() {
+        const creator = Email;
+        const submission_id = document.getElementById("submission_id").value;
+
+        fetch(`submission/${creator}/${submission_id}`)
+            .then(response => {
+                if(response.ok){
+                    // Redirect to submissions page on success
+                    window.location.href = `submission/${creator}/${submission_id}`;
+                } else {
+                    console.error("Failed to go to view submission");
+                    showAlert("Cannot transfer you to page");
+                }
+            })
+            .catch(error => {
+                console.error("Error: ", error);
+            });
+
+        return null;
+    }
+
+    // // Function to run creation
+    // function runCreation() {
+    //     const submission_details = {
+    //         "email": Email,
+    //         "submission_id": document.getElementById("submission_id").value
+    //     };
+    //
+    //     try {
+    //         // POST request to execute submission using fetch
+    //         fetch('http://localhost:4008/execute-submission', {
+    //             method: 'POST',
+    //             headers: {
+    //                 "content-Type": "application/json"
+    //             },
+    //             body: JSON.stringify(submission_details),
+    //         })
+    //             .then(response => response.json())
+    //             .then(data => {
+    //
+    //                 // If declined == TRUE , show success alert
+    //                 if (data.accept) {
+    //                     showAlert(" EXECUTION FAIL: \n Not enough credits to execute: " + submission_details.submission_id);
+    //
+    //                     // If declined == FALSE, show success alert
+    //                 } else if (!data.accept) {
+    //                     showAlert(" Submission: " + submission_details.submission_id + " sent to solver");
+    //
+    //                 }
+    //
+    //             })
+    //             .catch(error => {
+    //                 // Handle any errors, like network issues or non-OK status
+    //                 console.error("Error: ", error);
+    //                 showAlert("An error occurred: " + error.message);
+    //             });
+    //
+    //     } catch (error) {
+    //         // Handle any unexpected JavaScript errors
+    //         console.error("Unexpected error: ", error);
+    //         showAlert("An unexpected error occurred trying to execute request, in submissions.html.");
+    //     }
+    // }
+
+    // Code for custom alert
+    // Επιλέξτε το κουμπί Confirm και το modal
+    const confirmcreationButton = document.querySelector('.confirm-creation-button');
+    const modal = document.querySelector('.modal');
+    const closeBtn = document.querySelector('.close-btn');
+
+    // Όταν πατηθεί το κουμπί "Confirm", το modal θα εμφανιστεί
+    confirmcreationButton.addEventListener('click', function() {
+        modal.style.display = 'flex'; // Ανοίγει το modal
+        modal.classList.add('show'); // Προσθέτει την κλάση για ομαλή μετάβαση
+    });
+
+    // Όταν πατηθεί το κουμπί κλεισίματος, το modal κλείνει
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none'; // Κλείνει το modal
+        modal.classList.remove('show'); // Αφαιρεί την κλάση για ομαλή μετάβαση
+    });
+
+    // Κλείσιμο του modal όταν πατηθεί οπουδήποτε έξω από το modal
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none'; // Κλείνει το modal
+            modal.classList.remove('show'); // Αφαιρεί την κλάση για ομαλή μετάβαση
+        }
+    });
+
+    // Λειτουργία για να κλείσει το custom alert
+    function closeAlert() {
+        document.getElementById("custom-alert").style.display = "none";
+        // Reload the page after alert
+        location.reload();
+    }
+
+    function showAlert(message) {
+        document.getElementById("alert-message").innerText = message;
+        document.getElementById("custom-alert").style.display = "flex"; // Άμεση εμφάνιση
+    }
+    </script>
+
+</body>
+</html>

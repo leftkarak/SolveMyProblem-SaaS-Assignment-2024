@@ -1,0 +1,379 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Ολόκληρη η σελίδα καλύπτεται από την εικόνα */
+body {
+    margin: 0;
+    padding: 0;
+    background: url("/img/pikaso_embed.png") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh; /* Ύψος 100% της προβολής */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Στυλ για το header */
+header {
+    background-color: rgba(75, 0, 130, 0.65); /*Σκουρο μωβ*/
+    color: white;
+    width: 100%;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Container για λογότυπο, κουμπιά και τίτλο */
+.logo-container {
+    display: flex;
+    justify-content: space-between; /* Τοποθετεί τα στοιχεία αριστερά και δεξιά */
+    align-items: center;
+    width: 100%;
+}
+
+.logo-container h1 {
+    margin-left: 110px;
+}
+/* Στυλ για το email (στο κέντρο της γραμμής) */
+#email {
+    font-size: 18px;
+}
+
+/* Αριστερό τμήμα (κουμπιά) */
+.left-section {
+    display: flex;
+    align-items: center; /* Στοιχίζει τα κουμπια στην ίδια γραμμη στην ίδια γραμμή */
+}
+
+/* Στυλ για τα κουμπιά */
+.create_submission-credits-submissions-log {
+    margin-left: 110px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Απόσταση ανάμεσα στα κουμπιά */
+}
+
+.create_submission-btn,
+.credits-btn,
+.submissions-btn,
+.log-btn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    color: white;
+    right: 15px;
+    cursor: pointer;
+}
+
+.create-icon, .coin-icon, .home-icon, .log-icon {
+    font-size: 15px; /* Μέγεθος του emoji */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; /* Κύκλος */
+    background-color: rgba(255, 255, 255, 0.3); /* Διαφανές φόντο */
+    border: 2px solid white;
+}
+
+.create_submission-text, .credits-text, .submissions-text, .log-text {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+/* Γραμμή για το email και το timestamp */
+.right-section{
+    display: flex;
+    justify-content: space-between; /* Στοιχίζει το email αριστερά και το timestamp δεξιά */
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+.page-title{
+    font-size: 30px;
+    margin-left: 250px;/*Αλλάζεις την τιμή ανάλογα με την επιθυμητή απόσταση */
+}
+
+/* Στυλ για την ημερομηνία/ώρα (κάτω από τον τίτλο) */
+.timestamp {
+    font-size: 15px;
+}
+
+.container {
+    margin-top: 150px; /* Κατάλληλη απόσταση από το header */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Στυλ για τις γραμμές των προγραμμάτων */
+.row-info {
+    display: flex;
+    justify-content: space-around; /* Εξίσου διανεμημένα τα box-info */
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+/* Στυλ για τα info box */
+.box-info {
+    width: 45%;
+    background-color: rgba(255, 255, 255, 0.7); /* Λευκό με λίγο διαφάνεια */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin:20px;
+}
+.program-cell {
+    width: 45%;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.program-box {
+    background-color: #f1f1f1;
+    height: 200px;
+    padding: 15px;
+    overflow: auto;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+.btn {
+    background-color: #4b0082; /* Σκούρο μωβ */
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background-color: #3c006b; /* Darker όταν το hover */
+}
+
+/* Modal για full screen view */
+.file-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 2000;
+    width: 90%; /* Πλάτος να καλύπτει όλο το παράθυρο */
+    height: 90%; /* Ύψος να καλύπτει όλη την οθόνη */
+    background-color: white; /* Άσπρο background */
+    overflow: auto; /* Scroll αν το περιεχόμενο είναι μεγαλύτερο από την οθόνη */
+    justify-content: center;
+    align-items: center;
+}
+
+.file-modal-content {
+    width: 100%; /* Πλάτος του modal */
+    height: 100%; /* Ύψος του modal */
+    background-color: white; /* Άσπρο background για το περιεχόμενο */
+    padding: 20px;
+    position: relative;
+    overflow: auto;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    white-space: pre-wrap;
+}
+
+/* Close button styling */
+.close-file {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #D00A00;;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10%;
+}
+
+
+/* Modal (background) */
+.modal {
+    display: none; /* Κρυφό από προεπιλογή */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Ελαφρώς σκοτεινό φόντο */
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Modal content */
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.9); /* Λευκό με μικρή διαφάνεια */
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Σκιά για τρισδιάστατη αίσθηση */
+    max-width: 400px;
+    margin: auto;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: scale(0.9); /* Ξεκινάει μικρό */
+    opacity: 0; /* Ξεκινάει αόρατο */
+}
+
+.modal.show .modal-content {
+    transform: scale(1); /* Σταδιακά μεγαλώνει */
+    opacity: 1; /* Σταδιακά γίνεται ορατό */
+}
+.alert-message {
+    font-size: 20px; /* Καθορίζει το μέγεθος της γραμματοσειράς */
+    color: darkred; /* Προαιρετικό: Καθορίζει το χρώμα του μηνύματος */
+    padding: 10px; /* Προσθέτει λίγο χώρο γύρω από το κείμενο */
+    background-color: transparent; /* Αφαίρεση φόντου */
+    border-radius: 5px; /* Προσθέτει καμπυλωτές γωνίες */
+    border: none; /* Αφαίρεση ορίου */
+    box-shadow: none; /* Αφαίρεση σκιάς */
+    margin-top: 15px;
+}
+
+/* Κουμπί για κλείσιμο */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #333; /* Αλλαγή χρώματος κατά το hover */
+}
+
+/* Confirm button στο modal */
+.confirm-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Απόσταση από το κείμενο */
+}
+
+.confirm-button:hover {
+    background-color: #45a049;
+}
+
+.logo-image {
+    position: absolute;
+    top: 10px;          /* Τοποθέτηση στην κορυφή του container */
+    left: 10px;        /* Τοποθέτηση δεξιά */
+    width: 110px;    /* Προσαρμόστε το μέγεθος ανάλογα με τις ανάγκες σας */
+    height: auto;
+}
+
+/*ΕΚΑΝΑ ΔΥΟ ΦΟΡΕΣ ΤΗ ΕΝΤΟΛΗ ΓΙΑ ΚΟΥΜΠΙΑ, CREATE - RUN*/
+/* Confirm button στο creation*/
+
+.confirm-run-button {
+    background-color: blue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-right: 80px;
+}
+
+.confirm-run-button:hover {
+    background-color: darkblue;
+}
+
+
+.confirm-results-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Απόσταση από το κείμενο */
+    margin-left: 70px;
+}
+
+.confirm-results-button:hover {
+    background-color: #45a049;
+}
+
+.confirm-delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 20px; /* Απόσταση από το κείμενο */
+    margin-left: 60px;
+}
+
+.confirm-delete-button:hover {
+    background-color: darkred;
+}
+/* Στυλ για το κουμπί όταν είναι disabled */
+.confirm-results-button:disabled {
+    background-color: #ccc; /* Γκρι ξεθωριασμένο χρώμα */
+    color: #666; /* Ξεθωριασμένο χρώμα κειμένου */
+    cursor: not-allowed; /* Δείκτης ποντικιού που δείχνει ότι είναι απενεργοποιημένο */
+    border: none;
+}
+/* Στυλ για το κουμπί όταν είναι disabled */
+.confirm-delete-button:disabled {
+    background-color: #ccc; /* Γκρι ξεθωριασμένο χρώμα */
+    color: #666; /* Ξεθωριασμένο χρώμα κειμένου */
+    cursor: not-allowed; /* Δείκτης ποντικιού που δείχνει ότι είναι απενεργοποιημένο */
+    border: none;
+}
+/* Στυλ για το κουμπί όταν είναι disabled */
+.confirm-run-button:disabled {
+    background-color: #ccc; /* Γκρι ξεθωριασμένο χρώμα */
+    color: #666; /* Ξεθωριασμένο χρώμα κειμένου */
+    cursor: not-allowed; /* Δείκτης ποντικιού που δείχνει ότι είναι απενεργοποιημένο */
+    border: none;
+}
+
+/* Προσθήκη αν το κουμπί είναι ενεργοποιημένο μετά το disable */
+.confirm-results-button:not(:disabled):hover {
+    background-color: #45a049;
+}
+/* Προσθήκη αν το κουμπί είναι ενεργοποιημένο μετά το disable */
+.confirm-run-button:not(:disabled):hover {
+    background-color: blue;
+}
+/* Προσθήκη αν το κουμπί είναι ενεργοποιημένο μετά το disable */
+.confirm-delete-button:not(:disabled):hover {
+    background-color: red;
+}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/view_edit.css">
+    <title> View Submission </title>
+</head>
+<body>
+
+<header>
+    <h1> Solve My Problem </h1>
+
+    <p> Logged in as: <strong id="email"></strong> </p>
+</header>
+
+<div class="container">
+
+    <!--Info-->
+    <div class="row-info">
+        <div class="box-info">
+            <h4> Creator: </h4>
+            <p> <strong id="creator"></strong> </p>
+        </div>
+        <div class="box-info">
+            <h4> Submission Name: </h4>
+            <p> <strong id="submission"></strong> </p>
+        </div>
+    </div>
+
+
+    <div class="row-info">
+
+        <!--Python Cell-->
+        <div class="program-cell">
+            <h2>Python</h2>
+            <div class="program-box" id="python-preview"></div>
+            <div class="action-box">
+                <button class="btn" onclick="openModal(`python`)">Full Screen</button>
+                <button class="btn" onclick="downloadCode(`python`)">Download</button>
+            </div>
+        </div>
+
+        <!--JSON Cell-->
+        <div class="program-cell">
+            <h2>JSON</h2>
+            <div class="program-box" id="json-preview"></div>
+            <div class="action-box">
+                <button class="btn" onclick="openModal(`json`)">Full Screen</button>
+                <button class="btn" onclick="downloadCode(`json`)">Download</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="pythonModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal(`python`)">Close</button>
+        <pre id='python-code'></pre>
+    </div>
+</div>
+<div id="jsonModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal(`json`)">Close</button>
+        <pre id='json-code'></pre>
+    </div>
+</div>
+
+
+<script>
+    // Global variables
+    let jsonData;
+    let creator;
+    let submission;
+
+    // GET request to fetch email and parameters from session
+    fetch('/submission/get-email')
+        .then(response => response.json())
+        .then(data => {
+            // Set the email and parameters
+            document.getElementById("email").textContent = data.email;
+            let creator_email = data.creator;
+            let submission_id = data.submission;
+
+            // Now that we have creator_email and submission_id, we can make the second fetch request
+            // GET request to fetch the submission information when the page loads
+            return fetch(`http://localhost:4008/submission/${creator_email}/${submission_id}`);
+        })
+        .then(response => response.json())  // Parse the JSON response from the second fetch
+        .then(data => {
+            if (!data) {
+                throw new Error("No data received");
+            }
+
+            jsonData = data;
+            creator = jsonData.email;
+            submission = jsonData.submission_id;
+
+        })
+        .catch(error => {
+            // Catch and log any errors from either fetch
+            console.error("Error occurred:", error.message || error);
+        });
+
+
+    // Display submission information from the base
+    document.getElementById("creator").textContent = creator;
+    document.getElementById("submission").textContent = submission;
+
+
+    // Display the Python code in the text container (short version)
+    const pythonPreview = document.getElementById('python-preview');
+    pythonPreview.textContent = jsonData.users_code;
+
+    // Format JSON with indentation and display it
+    const jsonPreview = document.getElementById('json-preview');
+    jsonPreview.textContent = JSON.stringify(jsonData.users_input, null, 2);
+
+    // Function to open the modal
+    function openModal(lang) {
+        if(lang === `python`)
+        {
+            document.getElementById("pythonModal").style.display = "block";
+            document.getElementById('python-code').textContent = jsonData.users_code;
+        }else{
+            const formattedJson = JSON.stringify(jsonData.users_input, null, 2);
+            document.getElementById("jsonModal").style.display = "block";
+            document.getElementById("json-code").textContent = formattedJson;
+        }
+    }
+
+    // Function to close the modal
+    function closeModal(lang) {
+        if (lang ===`python`) {
+            document.getElementById("pythonModal").style.display = "none";
+        }else {
+            document.getElementById("jsonModal").style.display = "none";
+        }
+    }
+
+    // JavaScript function to handle the download
+    function downloadCode(lang) {
+        if (lang === `python`){
+            code = pythonPreview.textContent;
+        }else{
+            code = jsonPreview.textContent;
+        }
+        const blob = new Blob([code], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        if (lang === `python`){
+            a.download = 'code.py'
+        }else{
+            a.download = 'code.txt'
+        }
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+
+</script>
+
+</body>
+</html>

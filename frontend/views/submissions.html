@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title> Submissions </title>
+    <link rel="stylesheet" href="/css/submissions.css">
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo-container">
+        <h1>Solve My Problem</h1>
+        <img src="/img/540076-200.png" alt="Company Logo" class="logo-image">
+        <p>Logged in as: <strong id="email"></strong></p>
+    </div>
+
+    <!-- Λογότυπο και κουμπιά στην ίδια γραμμή -->
+    <div class="left-section">
+
+        <div class="credits-create_submission-log">
+            <form id="create_submissionForm">
+                <button type="submit" class="create_submission-btn">
+                    <span class="create-icon">📝</span>
+                    <span class="create_submission-text">New Submission</span>
+                </button>
+            </form>
+
+            <form id="creditsForm">
+                <button type="submit" class="credits-btn">
+                    <span class="coin-icon">💰</span>
+                    <span class="credits-text">Buy/View Credits</span>
+                </button>
+            </form>
+            <form id="analyticsForm">
+                <button type="submit" class="log-btn">
+                    <span class="log-icon">📊</span>
+                    <span class="log-text">Analytics</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Τίτλος στο κεντρο σχεδον στην ίδια γραμμή με τα κουμπιά και email τερμα δεξιά -->
+        <div class="right-section">
+            <h2 class="page-title">🏛 Submissions</h2>
+            <div class="timestamp">
+                <span id="datetime"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Custom Alert Modal -->
+<div id="custom-alert" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeAlert()">&times;</span>
+        <div class="alert-message">
+            <p id="alert-message"></p>
+        </div>
+        <button class="confirm-button" onclick="closeAlert()">OK</button>
+    </div>
+</div>
+
+    <div class="container">
+        <div class="table-container" id="table-container"></div>
+    </div>
+
+
+    <script src="/js/timestamp.js"></script>
+    <script>
+        // Header components
+        // GET request to fetch email from session
+        fetch('/submissions/get-email')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("email").textContent = data.email;
+            })
+            .catch(error => {
+                console.error("Error fetching email in submissions.html: ", error)
+            });
+
+
+        // Action when Buy/View Credits button is pressed
+        document.getElementById("creditsForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            fetch('/credits')
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to credits page on success
+                        window.location.href = '/credits';
+                    } else {
+                        console.error('Failed to go to /credits');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during loading credits:', error);
+                });
+        });
+
+        // Action when Create_Submission button is pressed
+        document.getElementById("create_submissionForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            fetch('/create-submission')
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to create-submission page on success
+                        window.location.href = '/create-submission';
+                    } else {
+                        console.error('Failed to go to /create-submission');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during loading create-submission:', error);
+                });
+        });
+
+        // Action when Log Analytics button is pressed
+        document.getElementById("analyticsForm").addEventListener("submit", function(event) {
+            event.preventDefault();  // Prevent default form submission
+
+            fetch('/analytics')
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to credits page on success
+                        window.location.href = '/analytics';
+                    } else {
+                        console.error('Failed to go to /analytics');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during loading analytics:', error);
+                });
+        });
+
+
+        // GET request to fetch the submissions when the page loads
+        fetch('http://localhost:4011/submissions')
+            .then(response => response.json())  // Parse the JSON response
+            .then(data => {
+                if (!data) {
+                    throw new Error("No data received");
+                }
+
+                // Call the function to create and display the table
+                createTable(data);
+            })
+            .catch(error => {
+                // Catch and log any errors
+                console.error("Error occurred while fetching submissions in submissions.html:", error.message || error);
+            });
+
+
+        // Function to run submission
+        function runSubmission(email, submission_id) {
+            const submission_details = {
+                "email":  email,
+                "submission_id": submission_id
+            };
+
+            try {
+                // POST request to execute submission using fetch
+                fetch('http://localhost:4008/execute-submission', {
+                    method: 'POST',
+                    headers: {
+                        "content-Type": "application/json"
+                    },
+                    body: JSON.stringify(submission_details),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+
+                        // If accept === "false" , show fail alert
+                        if (data.accept === "false") {
+                            showAlert(" EXECUTION FAIL: \n Not enough credits to execute: " + submission_id);
+
+                            // If accept === "true", show success alert
+                        } else if (data.accept === "true") {
+                            showAlert(" Submission: " + submission_id + " sent to solver");
+
+                        }
+                        /*
+                            This else is used to alert the frontend that the synchronisation/consumer bug occurred in the backend.
+                            The bug is that sometimes two specific topics aren't consumed by the ms-submission adapter.
+                            The two topic are execution-accepted and execution-denied
+                        */
+                        else {
+                            console.log(" The bug happened !!!");
+                            showAlert(" Execution Request Send !!! ");
+                        }
+
+                    })
+                    .catch(error => {
+                        // Handle any errors, like network issues or non-OK status
+                        console.error("Error: ", error);
+                        showAlert("An error occurred: " + error.message);
+                    });
+
+            } catch (error) {
+                // Handle any unexpected JavaScript errors
+                console.error("Unexpected error: ", error);
+                showAlert("An unexpected error occurred trying to execute request, in submissions.html.");
+            }
+        }
+
+        // Function to go to view submission page
+        function toView(creator, submission_id) {
+
+            fetch(`submission/${creator}/${submission_id}`)
+                .then(response => {
+                    if(response.ok){
+                        // Redirect to submissions page on success
+                        window.location.href = `submission/${creator}/${submission_id}`;
+                    } else {
+                        console.error("Failed to go to view submission");
+                        showAlert("Cannot transfer you to page");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error: ", error);
+                });
+
+            return null;
+        }
+
+        // Function to go to result page
+        function toResult(creator, submission_id) {
+
+            fetch(`/results/${creator}/${submission_id}`)
+                .then(response => {
+                    if(response.ok){
+                        // Redirect to submissions page on success
+                        window.location.href = `/results/${creator}/${submission_id}`;
+                    } else {
+                        console.error("Failed to go to view submission");
+                        showAlert("Cannot transfer you to page");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error: ", error);
+                });
+
+            return null;
+        }
+
+
+        // Function to go delete submission
+        function Delete(creator, submission) {
+            let submission_details = {
+                "email": creator,
+                "submission_id": submission
+            }
+
+            try {
+                // POST request to update the backend using fetch
+                fetch('http://localhost:4008/delete-submission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(submission_details)
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // If the status is 200 OK, show success alert
+                            showAlert("Submission Deleted");
+
+                        } else {
+                            // If not 200 OK, handle as an error
+                            throw new Error("Deletion failed with status: " + response.status);
+                        }
+                    })
+                    .catch(error => {
+                        // Handle any errors, like network issues or non-OK status
+                        console.error("Error: ", error);
+                        showAlert("An error occurred: " + error.message);
+                    });
+
+            } catch (error) {
+                // Handle any unexpected JavaScript errors
+                console.error("Unexpected error: ", error);
+                showAlert("An unexpected error occurred.");
+            }
+        }
+
+
+        // Function to create and display the table of submissions
+        function createTable(submission_list) {
+            const submissions = submission_list.submissions;
+
+            // Create table element
+            let table = document.createElement('table');
+            table.classList.add('submissions-table'); // Apply table class
+
+            // Create table header
+            let thead = table.createTHead();
+            let headerRow = thead.insertRow();
+
+            // Define table headers
+            const headers = ['Submission ID', 'Email', 'State', 'Execution','Creation Date', 'Last Update Date', 'Actions'];
+
+            headers.forEach(headerText => {
+                let th = document.createElement('th');
+                th.textContent = headerText;
+                th.classList.add('th'); // Apply header cell class
+
+                headerRow.appendChild(th);
+            });
+
+            // Create table body
+            let tbody = table.createTBody();
+
+            // Populate table rows
+            submissions.forEach(submission => {
+                let row = tbody.insertRow();
+                row.classList.add('tr'); // Apply row class for hover effect
+
+                let cellSubmissionId = row.insertCell();
+                cellSubmissionId.textContent = submission.submission_id;
+                cellSubmissionId.classList.add('td'); // Apply cell class
+
+                let cellEmail = row.insertCell();
+                cellEmail.textContent = submission.email;
+                cellEmail.classList.add('td');
+
+                let cellState = row.insertCell();
+                let state = submission.state;
+                cellState.textContent = state;
+                cellState.classList.add('td');
+
+
+                //Run Button
+                let runAction = row.insertCell();
+                runAction.classList.add('td');
+                let runButton = document.createElement('button');
+                runButton.textContent = 'Run';
+                if (state !== "Ready"){
+                    runButton.style.visibility="hidden";
+                }
+                runButton.onclick = function() {
+                    // Call the function
+                    runSubmission(submission.email, submission.submission_id);
+
+                };
+                runButton.classList.add('run-button');
+                runAction.appendChild(runButton);
+
+
+                let cellCreationDate = row.insertCell();
+                cellCreationDate.textContent = new Date(submission.creation_date).toLocaleString();
+                cellCreationDate.classList.add('td');
+
+                let cellLastUpdateDate = row.insertCell();
+                cellLastUpdateDate.textContent = new Date(submission.last_update_date).toLocaleString();
+                cellLastUpdateDate.classList.add('td','last-update-date-cell');
+
+
+                // Action Buttons
+                let cellAction = row.insertCell();
+                cellAction.classList.add('td', 'action-cell');
+
+                let creator =  submission.email;
+                let submission_id = submission.submission_id;
+
+                // Create View button
+                let viewEditButton = document.createElement('button');
+                viewEditButton.textContent = 'View';
+                viewEditButton.classList.add('view-button');
+                // Call toView
+                viewEditButton.onclick = function () {
+                    toView(creator, submission_id);
+                };
+
+                // Create Result button
+                let resultButton = document.createElement('button');
+                resultButton.textContent = 'Result';
+                resultButton.classList.add('results-button');
+                if (state === "Completed") {
+                    resultButton.onclick = function () {
+                        // Call toView
+                        toResult(creator, submission_id);
+                    };
+                } else {
+                    resultButton.disabled = true;
+                }
+
+                // Create Delete button
+                let deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('delete-button');
+                if (state === "Waiting..." || state === "Running...") {
+                    deleteButton.disabled = true;
+                } else {
+                    deleteButton.onclick = function () {
+                        Delete(creator, submission_id);
+                    };
+                }
+                // Append buttons to the Action cell
+                cellAction.appendChild(viewEditButton);
+                cellAction.appendChild(resultButton);
+                cellAction.appendChild(deleteButton);
+
+            });
+
+            // Append the table to the container div
+            document.getElementById('table-container').appendChild(table);
+        }
+
+        // Code for custom alert
+        // Επιλέξτε το κουμπί Confirm και το modal
+        const confirmRunButton = document.querySelector('.run-button');
+        const confirmDeleteButton = document.querySelector('.delete-button');
+        const modal = document.querySelector('.modal');
+        const closeBtn = document.querySelector('.close-btn');
+
+        // Όταν πατηθεί το κουμπί Run, το modal θα εμφανιστεί
+        confirmRunButton.addEventListener('click', function() {
+            modal.style.display = 'flex'; // Ανοίγει το modal
+            modal.classList.add('show'); // Προσθέτει την κλάση για ομαλή μετάβαση
+        });
+
+        // Όταν πατηθεί το κουμπί "Delete", το modal θα εμφανιστεί
+        confirmDeleteButton.addEventListener('click', function() {
+            modal.style.display = 'flex'; // Ανοίγει το modal
+            modal.classList.add('show'); // Προσθέτει την κλάση για ομαλή μετάβαση
+        });
+
+        // Όταν πατηθεί το κουμπί κλεισίματος, το modal κλείνει
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none'; // Κλείνει το modal
+            modal.classList.remove('show'); // Αφαιρεί την κλάση για ομαλή μετάβαση
+        });
+
+        // Κλείσιμο του modal όταν πατηθεί οπουδήποτε έξω από το modal
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none'; // Κλείνει το modal
+                modal.classList.remove('show'); // Αφαιρεί την κλάση για ομαλή μετάβαση
+            }
+        });
+
+        // Λειτουργία για να κλείσει το custom alert
+        function closeAlert() {
+            document.getElementById("custom-alert").style.display = "none";
+            // Reload the page after alert
+            location.reload();
+        }
+
+        function showAlert(message) {
+            document.getElementById("alert-message").innerText = message;
+            document.getElementById("custom-alert").style.display = "flex"; // Άμεση εμφάνιση
+            return true;
+        }
+
+    </script>
+
+</body>
+</html>
