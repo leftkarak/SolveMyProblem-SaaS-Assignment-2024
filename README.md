@@ -1,4 +1,8 @@
 This repository contains a university project. The [assigment](https://github.com/leftkarak/SolveMyProblem-SaaS-Assignment-2024/tree/main/Assigment) as given by our SaaS course professor.
+
+About (again):
+University project to create a Dockerized SaaS platform that provides users with an online environment to upload, execute, and view results from their code and data inputs. Tools for deployment, development, documentation, and testing include Docker, Kafka, Node.js, Express, Visual Paradigm, and JMeter. Note: project still contains some minor bugs.
+
 --------------------------------------------------------------------------------------------------------------------------
 
 # NTUA ECE SAAS 2024 PROJECT
@@ -94,3 +98,5 @@ View results, after execution (in full screen or/and download them):
 View analytical data and statistics from previous executions:
 ![analytics](https://github.com/user-attachments/assets/766938cc-6c69-4ec1-a90f-0a64e14d5a63)
 
+And a screenshot of the containers running in Docker:
+![Docker](https://github.com/user-attachments/assets/9cfcebc3-0286-47bc-a81c-b1b40ab2ab10)
