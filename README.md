@@ -1,3 +1,6 @@
+This repository contains a university project. The [assigment](https://github.com/leftkarak/SolveMyProblem-SaaS-Assignment-2024/tree/main/Assigment) as given by our SaaS course professor.
+--------------------------------------------------------------------------------------------------------------------------
+
 # NTUA ECE SAAS 2024 PROJECT
   
 ## TEAM (03)
