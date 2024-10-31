@@ -68,26 +68,26 @@ http://localhost:3000
 The application pages highlighting all primary features of the service:
 
 Login:
-![login](https://github.com/user-attachments/assets/cf9213d9-baeb-44fb-bf10-9afc634cb48e)
+![login](https://github.com/user-attachments/assets/dfb0f23b-0e99-47bc-be8d-656cbf8c7008)
 
 Main page (submission list):
-![subs](https://github.com/user-attachments/assets/55ac7947-a289-4bc2-962a-a10567a86488)
-
+![subs](https://github.com/user-attachments/assets/de395708-0100-434c-a7ab-eb149af3568e)
 
 Show/Add credits amount:
-![Credits](https://github.com/user-attachments/assets/31a6e544-53d4-4a1a-b982-28a29cfb5eff)
+![Credits](https://github.com/user-attachments/assets/7066762d-59b5-4f4f-a4f0-868e579b5f11)
 
 Create submission:
-![Create](https://github.com/user-attachments/assets/acdc6702-7c80-4d1b-8204-d16d45482fee)
+![Create](https://github.com/user-attachments/assets/8c9e8553-d9b9-4a55-8192-2a1c51f38af5)
 
 View submission details (in full screen or/and download them):
-![view0](https://github.com/user-attachments/assets/f1d91279-6d6b-4584-a819-15b7823b7008)
-![view1](https://github.com/user-attachments/assets/c297f733-e322-4feb-9665-b4131c926cc9)
-![view2](https://github.com/user-attachments/assets/6cccb470-59d8-43d0-beec-a7b1d0e33346)
+![view0](https://github.com/user-attachments/assets/eab37cb8-5514-4f9a-8436-845b9f400900)
+![view1](https://github.com/user-attachments/assets/2750de73-a65c-4deb-aab3-979f5f9dab8a)
+![view2](https://github.com/user-attachments/assets/ae603199-e4f7-4c51-a38a-d6c4389c19a1)
 
 View results, after execution (in full screen or/and download them):
-![results0](https://github.com/user-attachments/assets/14620fb8-67ff-4ba3-be87-dcfa32b49864)
-![results1](https://github.com/user-attachments/assets/15f71564-0bcc-4b96-a8fc-6e97be00a46f)
+![results0](https://github.com/user-attachments/assets/4de38499-4153-4893-bafe-3963fbd3a81f)
+![results1](https://github.com/user-attachments/assets/5a9e238a-ef52-485b-84f0-bd3cea0ebb65)
 
 View analytical data and statistics from previous executions:
-![analytics](https://github.com/user-attachments/assets/d3ab48fc-19da-4b6c-97aa-9c0e41549fa6)
+![analytics](https://github.com/user-attachments/assets/766938cc-6c69-4ec1-a90f-0a64e14d5a63)
+
